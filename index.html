@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Manejo Ovino — Registro de Campo</title>
+<meta name="description" content="Registro de campo para manejo ovino: destete, esquila, señalada, movimientos y condición corporal.">
+<meta name="theme-color" content="#A9631A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Manejo Ovino">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3EEE3;
+    --surface:#FFFFFF;
+    --surface-2:#ECE4D2;
+    --border:#D8CCAE;
+    --text:#241F16;
+    --text-dim:#6B624E;
+    --accent:#A9631A;
+    --accent-text:#FFF8EC;
+    --accent-2:#5B6B3F;
+    --danger:#9C4130;
+    --success:#3F6B45;
+    --radius:12px;
+    --shadow:0 1px 2px rgba(36,31,22,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1912;
+      --surface:#242017;
+      --surface-2:#2E291D;
+      --border:#413A29;
+      --text:#F1EBDC;
+      --text-dim:#B4A88C;
+      --accent:#D69A44;
+      --accent-text:#1B1912;
+      --accent-2:#8CA26A;
+      --danger:#D08370;
+      --success:#7FAE7F;
+      --shadow:0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B1912;
+    --surface:#242017;
+    --surface-2:#2E291D;
+    --border:#413A29;
+    --text:#F1EBDC;
+    --text-dim:#B4A88C;
+    --accent:#D69A44;
+    --accent-text:#1B1912;
+    --accent-2:#8CA26A;
+    --danger:#D08370;
+    --success:#7FAE7F;
+    --shadow:0 1px 3px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Source Sans 3',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:78px;
+  }
+  h1,h2,h3,.num-display,.totalizer strong{
+    font-family:'Archivo',system-ui,sans-serif;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    padding:14px 16px 10px;
+  }
+  .topbar h1{
+    margin:0 0 2px;
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:.2px;
+  }
+  .topbar .sub{
+    font-size:12.5px;
+    color:var(--text-dim);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--text-dim);flex:0 0 auto;}
+  .dot.on{background:var(--success);}
+  .dot.off{background:var(--danger);}
+
+  main{max-width:640px;margin:0 auto;padding:14px 14px 24px;}
+  section.panel{display:none;}
+  section.panel.active{display:block;}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow);
+  }
+  .card h2{
+    margin:0 0 12px;
+    font-size:15px;
+    text-transform:none;
+    letter-spacing:.3px;
+    color:var(--accent);
+    border-bottom:1px solid var(--border);
+    padding-bottom:8px;
+  }
+  .card h3{
+    margin:16px 0 10px;
+    font-size:13.5px;
+    color:var(--text-dim);
+    font-weight:700;
+  }
+  .card h3:first-child{margin-top:0;}
+
+  .field{margin-bottom:12px;}
+  .field label{
+    display:block;
+    font-size:12.5px;
+    color:var(--text-dim);
+    margin-bottom:4px;
+    font-weight:600;
+  }
+  input[type=text],input[type=number],input[type=date],textarea,select{
+    width:100%;
+    padding:11px 12px;
+    font-size:16px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    background:var(--surface-2);
+    color:var(--text);
+    font-family:inherit;
+  }
+  input:focus,textarea:focus,select:focus{
+    outline:2px solid var(--accent);
+    outline-offset:1px;
+  }
+  textarea{resize:vertical;min-height:64px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+  .readonly-box{
+    background:var(--surface-2);
+    border:1px dashed var(--border);
+    border-radius:9px;
+    padding:10px 12px;
+    font-size:15px;
+    color:var(--text-dim);
+  }
+  .readonly-box strong{color:var(--text);font-family:'Archivo',sans-serif;}
+  .warn-box{
+    background:transparent;
+    border:1px solid var(--danger);
+    color:var(--danger);
+    border-radius:9px;
+    padding:9px 12px;
+    font-size:13px;
+    margin-top:6px;
+    display:none;
+  }
+  .warn-box.show{display:block;}
+
+  /* buttons */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    padding:12px 18px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:700;
+    border:1px solid transparent;
+    cursor:pointer;
+    font-family:'Source Sans 3',sans-serif;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-text);width:100%;padding:14px;font-size:16px;}
+  .btn-secondary{background:transparent;color:var(--text);border-color:var(--border);}
+  .btn-ghost{background:transparent;color:var(--accent);border:none;padding:8px 4px;font-size:14px;}
+  .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger);}
+  .btn-sm{padding:8px 12px;font-size:13.5px;}
+  .btn:active{transform:scale(.98);}
+  .btn:disabled{opacity:.45;cursor:default;}
+
+  .actions-row{display:flex;gap:10px;margin-top:6px;}
+  .actions-row .btn{flex:1;}
+
+  /* tables */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:9px;margin-bottom:10px;}
+  table{border-collapse:collapse;width:100%;min-width:480px;font-size:13.5px;}
+  table.narrow{min-width:0;}
+  th,td{padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;}
+  th{background:var(--surface-2);color:var(--text-dim);font-weight:700;font-size:12px;}
+  td input{width:70px;padding:6px 6px;font-size:14px;text-align:center;background:var(--surface);}
+  td input.wide{width:110px;text-align:left;}
+  tr.subtotal td{background:var(--surface-2);font-weight:700;color:var(--accent-2);}
+  tr.subtotal input{display:none;}
+  .cuarto-label{font-weight:800;font-family:'Archivo',sans-serif;color:var(--accent);}
+  .row-del{color:var(--danger);background:none;border:none;font-size:17px;cursor:pointer;padding:4px 8px;}
+
+  .add-row-btn{
+    background:none;border:1px dashed var(--border);color:var(--accent-2);
+    width:100%;padding:9px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;margin-top:2px;
+  }
+
+  /* condicion corporal tool */
+  .cc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px;}
+  .cc-col{
+    border:1px solid var(--border);border-radius:9px;background:var(--surface-2);
+    display:flex;flex-direction:column;align-items:center;padding:8px 2px;
+  }
+  .cc-score{font-size:11.5px;color:var(--text-dim);font-weight:700;margin-bottom:6px;}
+  .cc-count{
+    font-family:'Archivo',sans-serif;font-size:20px;font-weight:800;color:var(--text);
+    min-height:26px;
+  }
+  .cc-tally{font-size:9px;color:var(--text-dim);min-height:12px;letter-spacing:1px;line-height:1.3;word-break:break-all;text-align:center;}
+  .cc-tap{
+    width:100%;margin-top:8px;background:var(--accent);color:var(--accent-text);
+    border:none;border-radius:7px;padding:10px 0;font-size:17px;font-weight:800;cursor:pointer;
+  }
+  .cc-tap:active{transform:scale(.95);}
+  .cc-summary{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--surface-2);border-radius:9px;padding:14px;margin:10px 0 14px;
+  }
+  .cc-summary .label{font-size:12.5px;color:var(--text-dim);font-weight:700;}
+  .cc-summary .value{font-family:'Archivo',sans-serif;font-size:28px;font-weight:800;color:var(--accent);}
+
+  /* history */
+  .hist-item{
+    border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:8px;
+    background:var(--surface-2);font-size:13.5px;
+  }
+  .hist-item .hist-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .hist-item .hist-title{font-weight:700;font-family:'Archivo',sans-serif;font-size:14px;}
+  .hist-item .hist-date{color:var(--text-dim);font-size:12px;}
+  .hist-item .hist-detail{margin-top:6px;color:var(--text-dim);line-height:1.5;}
+  .hist-empty{color:var(--text-dim);font-size:13.5px;padding:6px 2px;}
+  .hist-del{background:none;border:none;color:var(--danger);font-size:16px;cursor:pointer;padding:2px 6px;}
+
+  .toast{
+    position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);
+    background:var(--text);color:var(--bg);padding:11px 18px;border-radius:30px;
+    font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;
+    white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* bottom nav */
+  nav.tabbar{
+    position:fixed;bottom:0;left:0;right:0;z-index:30;
+    background:var(--surface);border-top:1px solid var(--border);
+    display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  nav.tabbar button{
+    flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:6px 2px;color:var(--text-dim);font-size:10.5px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;
+  }
+  nav.tabbar button .ic{font-size:19px;}
+  nav.tabbar button.active{color:var(--accent);}
+
+  .sync-banner{
+    font-size:12px;color:var(--text-dim);background:var(--surface-2);border:1px solid var(--border);
+    border-radius:8px;padding:8px 10px;margin-bottom:12px;display:none;
+  }
+  .sync-banner.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1 id="pageTitle">Destete</h1>
+  <div class="sub"><span class="dot" id="syncDot"></span><span id="syncLabel">Conectando…</span></div>
+</div>
+
+<main>
+
+<div class="sync-banner" id="syncBanner"></div>
+
+<!-- ============ DESTETE ============ -->
+<section class="panel active" id="panel-destete">
+  <div class="card">
+    <h2>Datos generales</h2>
+    <div class="row2">
+      <div class="field"><label>Campo</label><input type="text" id="d_campo" placeholder="Ej. El Pino"></div>
+      <div class="field"><label>Fecha</label><input type="date" id="d_fecha"></div>
+    </div>
+    <div class="field"><label>Cuadro</label><input type="text" id="d_cuadro" placeholder="Ej. c2 norte"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ovejas</h2>
+    <div class="field"><label>Total Junta</label><input type="number" inputmode="numeric" id="d_totalJunta"></div>
+    <div class="row3">
+      <div class="field"><label>Buenas</label><input type="number" inputmode="numeric" id="d_buenas"></div>
+      <div class="field"><label>Refugo Inferior</label><input type="number" inputmode="numeric" id="d_refugoInf"></div>
+      <div class="field"><label>Refugo Superior</label><input type="number" inputmode="numeric" id="d_refugoSup"></div>
+    </div>
+    <div class="warn-box" id="d_juntaWarn">La suma de Buenas + Refugo Inferior + Refugo Superior no coincide con Total Junta.</div>
+
+    <div class="field" style="margin-top:14px;">
+      <label>Sacadas Total (Refugo Inf. + Refugo Sup., calculado)</label>
+      <div class="readonly-box">Sacadas: <strong id="d_sacadas">0</strong></div>
+    </div>
+
+    <div class="row2" style="margin-top:12px;">
+      <div class="field"><label>Borregas Agregadas</label><input type="number" inputmode="numeric" id="d_borregasAgr"></div>
+      <div class="field"><label>Ovejas Agregadas</label><input type="number" inputmode="numeric" id="d_ovejasAgr"></div>
+    </div>
+
+    <div class="field">
+      <label>Total Ovejas al Servicio</label>
+      <input type="number" inputmode="numeric" id="d_totalServicio" placeholder="Sugerido">
+      <div class="readonly-box" style="margin-top:6px;">Sugerencia (Buenas + Agregadas): <strong id="d_totalServicioSugerido">0</strong> — podés escribir el valor definitivo arriba si es distinto.</div>
+    </div>
+
+    <div class="field"><label>Condición Corporal (ovejas)</label><input type="number" step="0.1" inputmode="decimal" id="d_ccOvejas" placeholder="Usá la herramienta de Condición Corporal si preferís"></div>
+  </div>
+
+  <div class="card">
+    <h2>Borregos</h2>
+    <div class="row2">
+      <div class="field"><label>Machos Señalados</label><input type="number" inputmode="numeric" id="d_machosSen"></div>
+      <div class="field"><label>Hembras Señaladas</label><input type="number" inputmode="numeric" id="d_hembrasSen"></div>
+    </div>
+
+    <h3>Destino</h3>
+    <div class="table-wrap">
+      <table id="d_destinoTable">
+        <thead><tr><th style="text-align:left;">Destino</th><th>C</th><th>M</th><th>H</th><th>Total</th><th></th></tr></thead>
+        <tbody id="d_destinoBody"></tbody>
+        <tfoot><tr class="subtotal"><td style="text-align:left;">Totales</td><td id="d_totC">0</td><td id="d_totM">0</td><td id="d_totH">0</td><td id="d_totTotal">0</td><td></td></tr></tfoot>
+      </table>
+    </div>
+    <button class="add-row-btn" id="d_addDestino">+ Agregar fila de destino</button>
+
+    <div class="field" style="margin-top:14px;"><label>Condición Corporal (borregos)</label><input type="number" step="0.1" inputmode="decimal" id="d_ccBorregos"></div>
+  </div>
+
+  <div class="card">
+    <h2>Observaciones</h2>
+    <textarea id="d_obs" placeholder="Notas del campo..."></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="d_save">Guardar registro de Destete</button>
+
+  <div class="card" style="margin-top:18px;">
+    <h2>Historial — Destete</h2>
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="btn btn-secondary btn-sm" id="d_export">Exportar CSV</button>
+    </div>
+    <div id="d_history"><div class="hist-empty">Sin registros todavía.</div></div>
+  </div>
+</section>
+
+<!-- ============ ESQUILA ============ -->
+<section class="panel" id="panel-esquila">
+  <div class="card">
+    <h2>Datos generales</h2>
+    <div class="row2">
+      <div class="field"><label>Campo</label><input type="text" id="e_campo" placeholder="Ej. El Pino"></div>
+      <div class="field"><label>Fecha</label><input type="date" id="e_fecha"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Esquila por cuarto</h2>
+    <div id="e_cuartos"></div>
+
+    <div class="readonly-box" style="margin-top:4px;">
+      <div style="display:flex;justify-content:space-between;"><span>Total Diario — Cantidad</span><strong id="e_totDiarioCant">0</strong></div>
+      <div style="display:flex;justify-content:space-between;"><span>Total Diario — T.Cuadro</span><strong id="e_totDiarioTCuadro">0</strong></div>
+      <div style="display:flex;justify-content:space-between;"><span>Total Diario — Vellón</span><strong id="e_totDiarioV">0</strong></div>
+      <div style="display:flex;justify-content:space-between;"><span>Total Diario — T.Vellón</span><strong id="e_totDiarioTV">0</strong></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Condición Corporal</h2>
+    <div id="e_ccRows"></div>
+  </div>
+
+  <div class="card">
+    <h2>Observaciones</h2>
+    <textarea id="e_obs" placeholder="Notas del campo..."></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="e_save">Guardar registro de Esquila</button>
+
+  <div class="card" style="margin-top:18px;">
+    <h2>Historial — Esquila</h2>
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="btn btn-secondary btn-sm" id="e_export">Exportar CSV</button>
+    </div>
+    <div id="e_history"><div class="hist-empty">Sin registros todavía.</div></div>
+  </div>
+</section>
+
+<!-- ============ SEÑALADA ============ -->
+<section class="panel" id="panel-senalada">
+  <div class="card">
+    <h2>Datos generales</h2>
+    <div class="row2">
+      <div class="field"><label>Campo</label><input type="text" id="s_campo" placeholder="Ej. El Pino"></div>
+      <div class="field"><label>Fecha</label><input type="date" id="s_fecha"></div>
+    </div>
+    <div class="field"><label>Cuadro</label><input type="text" id="s_cuadro"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ovejas</h2>
+    <div class="row2">
+      <div class="field"><label>Ovejas Peladas</label><input type="number" inputmode="numeric" id="s_peladas"></div>
+      <div class="field"><label>Ovejas Lanudas</label><input type="number" inputmode="numeric" id="s_lanudas"></div>
+    </div>
+    <div class="field"><label>Ovejas Totales (calculado)</label><div class="readonly-box"><strong id="s_totales">0</strong></div></div>
+
+    <div class="row3" style="margin-top:12px;">
+      <div class="field"><label>Ovejas Venta</label><input type="number" inputmode="numeric" id="s_venta"></div>
+      <div class="field"><label>Ovejas Carav. Secas</label><input type="number" inputmode="numeric" id="s_caravSecas"></div>
+      <div class="field"><label>Ovejas Corporal</label><input type="number" step="0.1" inputmode="decimal" id="s_corporal"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Corderos señalados</h2>
+    <div class="table-wrap">
+      <table class="narrow">
+        <thead><tr><th style="text-align:left;"></th><th>Señalado</th><th>Venta</th><th>Campo</th></tr></thead>
+        <tbody>
+          <tr><td style="text-align:left;">Machos</td><td><input type="number" inputmode="numeric" id="s_machosSen"></td><td><input type="number" inputmode="numeric" id="s_machosVenta"></td><td><input type="number" inputmode="numeric" id="s_machosCampo"></td></tr>
+          <tr><td style="text-align:left;">Hembras</td><td><input type="number" inputmode="numeric" id="s_hembrasSen"></td><td><input type="number" inputmode="numeric" id="s_hembrasVenta"></td><td><input type="number" inputmode="numeric" id="s_hembrasCampo"></td></tr>
+          <tr class="subtotal"><td style="text-align:left;">Total</td><td id="s_totSen">0</td><td id="s_totVenta">0</td><td id="s_totCampo">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cc-summary" style="margin-top:6px;">
+      <span class="label">% Total de corderos señalados<br><span style="font-weight:400;font-size:11px;">(Total señalado × 100 / Ovejas totales)</span></span>
+      <span class="value" id="s_porcentaje">0%</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Observaciones</h2>
+    <textarea id="s_obs" placeholder="Notas del campo..."></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="s_save">Guardar registro de Señalada</button>
+
+  <div class="card" style="margin-top:18px;">
+    <h2>Historial — Señalada</h2>
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="btn btn-secondary btn-sm" id="s_export">Exportar CSV</button>
+    </div>
+    <div id="s_history"><div class="hist-empty">Sin registros todavía.</div></div>
+  </div>
+</section>
+
+<!-- ============ MOVIMIENTOS ============ -->
+<section class="panel" id="panel-movimientos">
+  <div class="card">
+    <h2>Campo</h2>
+    <div class="field"><input type="text" id="m_campo" placeholder="Ej. El Pino"></div>
+  </div>
+
+  <div class="card">
+    <h2>Movimientos</h2>
+    <div class="table-wrap">
+      <table id="m_table">
+        <thead><tr><th>Fecha</th><th>Cat.</th><th>Origen</th><th>Destino</th><th>Cant.</th><th></th></tr></thead>
+        <tbody id="m_body"></tbody>
+        <tfoot><tr class="subtotal"><td colspan="4" style="text-align:left;">Total</td><td id="m_totCant">0</td><td></td></tr></tfoot>
+      </table>
+    </div>
+    <button class="add-row-btn" id="m_addRow">+ Agregar movimiento</button>
+  </div>
+
+  <div class="card">
+    <h2>Observaciones</h2>
+    <textarea id="m_obs" placeholder="Notas..."></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="m_save">Guardar registro de Movimientos</button>
+
+  <div class="card" style="margin-top:18px;">
+    <h2>Historial — Movimientos</h2>
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="btn btn-secondary btn-sm" id="m_export">Exportar CSV</button>
+    </div>
+    <div id="m_history"><div class="hist-empty">Sin registros todavía.</div></div>
+  </div>
+</section>
+
+<!-- ============ CONDICION CORPORAL ============ -->
+<section class="panel" id="panel-cc">
+  <div class="card">
+    <h2>Datos generales</h2>
+    <div class="row2">
+      <div class="field"><label>Campo</label><input type="text" id="c_campo" placeholder="Ej. El Pino"></div>
+      <div class="field"><label>Fecha</label><input type="date" id="c_fecha"></div>
+    </div>
+    <div class="field"><label>Cuadro</label><input type="text" id="c_cuadro"></div>
+  </div>
+
+  <div class="card">
+    <h2>Tocá el puntaje de cada oveja revisada</h2>
+    <div class="cc-grid" id="c_grid"></div>
+    <div class="actions-row">
+      <button class="btn btn-secondary btn-sm" id="c_undo">Deshacer último</button>
+      <button class="btn btn-danger btn-sm" id="c_reset">Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Resultado</h2>
+    <div class="cc-summary">
+      <span class="label">Total Ovejas Revisadas</span>
+      <span class="value" id="c_totalOvejas">0</span>
+    </div>
+    <div class="cc-summary">
+      <span class="label">Promedio Condición Corporal<br><span style="font-weight:400;font-size:11px;">(Suma Total Numeral / Total Ovejas)</span></span>
+      <span class="value" id="c_promedio">—</span>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="c_save">Guardar registro de Condición Corporal</button>
+
+  <div class="card" style="margin-top:18px;">
+    <h2>Historial — Condición Corporal</h2>
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="btn btn-secondary btn-sm" id="c_export">Exportar CSV</button>
+    </div>
+    <div id="c_history"><div class="hist-empty">Sin registros todavía.</div></div>
+  </div>
+</section>
+
+</main>
+
+<nav class="tabbar">
+  <button data-panel="destete" class="active"><span class="ic">✂️</span>Destete</button>
+  <button data-panel="esquila"><span class="ic">🐑</span>Esquila</button>
+  <button data-panel="senalada"><span class="ic">🏷️</span>Señalada</button>
+  <button data-panel="movimientos"><span class="ic">🚚</span>Movim.</button>
+  <button data-panel="cc"><span class="ic">📊</span>Cond.Corp.</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+
+/* ---------------- utilities ---------------- */
+function $(id){ return document.getElementById(id); }
+function num(v){ const n = parseFloat(v); return isNaN(n) ? 0 : n; }
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'id-'+Date.now()+'-'+Math.random().toString(16).slice(2)); }
+function todayStr(){ const d=new Date(); return d.toISOString().slice(0,10); }
+function fmt(n){ return (Math.round(n*100)/100).toLocaleString('es-AR'); }
+
+let toastTimer=null;
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function csvEscape(v){
+  if(v===undefined||v===null) return '';
+  const s = String(v);
+  if(/[",\n;]/.test(s)) return '"'+s.replace(/"/g,'""')+'"';
+  return s;
+}
+function toCsv(rows){
+  return rows.map(r=>r.map(csvEscape).join(',')).join('\r\n');
+}
+
+async function downloadCsv(filenameBase, rows){
+  const csv = toCsv(rows);
+  const filename = filenameBase + '_' + todayStr() + '.csv';
+  if(downloadsCap){
+    try{
+      await downloadsCap.save({filename, data: csv});
+      toast('CSV exportado');
+    }catch(e){
+      toast('No se pudo exportar');
+    }
+  } else {
+    toast('Exportar no disponible en esta vista');
+  }
+}
+
+/* ---------------- tabs ---------------- */
+const panels = document.querySelectorAll('.panel');
+const tabs = document.querySelectorAll('nav.tabbar button');
+const titles = {destete:'Destete', esquila:'Esquila', senalada:'Señalada', movimientos:'Movimientos', cc:'Condición Corporal'};
+tabs.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const key = btn.dataset.panel;
+    tabs.forEach(b=>b.classList.toggle('active', b===btn));
+    panels.forEach(p=>p.classList.toggle('active', p.id==='panel-'+key));
+    $('pageTitle').textContent = titles[key];
+    window.scrollTo(0,0);
+  });
+});
+
+/* set default dates */
+['d_fecha','e_fecha','s_fecha','c_fecha'].forEach(id=>{ if($(id)) $(id).value = todayStr(); });
+
+/* remember last "campo" for convenience */
+const CAMPO_KEY = 'ovino_last_campo';
+const lastCampo = localStorage.getItem(CAMPO_KEY) || '';
+['d_campo','e_campo','s_campo','m_campo','c_campo'].forEach(id=>{ if($(id) && lastCampo) $(id).value = lastCampo; });
+function rememberCampo(v){ if(v) localStorage.setItem(CAMPO_KEY, v); }
+
+/* ================= DB / capabilities setup ================= */
+let dbCap = null, downloadsCap = null, capReady = false;
+
+async function initCapabilities(){
+  try{
+    if(window.claude && window.claude.use){
+      dbCap = await window.claude.use('db');
+      downloadsCap = await window.claude.use('downloads');
+    }
+  }catch(e){ /* design for absence */ }
+  capReady = true;
+  updateSyncUI();
+  wireHistories();
+}
+
+function updateSyncUI(){
+  const dot = $('syncDot'), label = $('syncLabel'), banner = $('syncBanner');
+  if(dbCap){
+    dot.className = 'dot on';
+    label.textContent = 'Sincronizado entre tus dispositivos';
+    banner.classList.remove('show');
+  } else {
+    dot.className = 'dot off';
+    label.textContent = 'Guardado solo en este dispositivo';
+    banner.textContent = 'No se pudo conectar el guardado sincronizado en esta vista: los registros se guardan solo en este teléfono o tablet, sin sincronizar con tus otros dispositivos.';
+    banner.classList.add('show');
+  }
+}
+
+/* ---------------- generic local fallback store ---------------- */
+function localGet(col){
+  try{ return JSON.parse(localStorage.getItem('ovino_'+col) || '[]'); }catch(e){ return []; }
+}
+function localSet(col, arr){
+  localStorage.setItem('ovino_'+col, JSON.stringify(arr));
+}
+function localAdd(col, doc){
+  const arr = localGet(col);
+  arr.unshift(doc);
+  localSet(col, arr);
+}
+function localDelete(col, id){
+  const arr = localGet(col).filter(d=>d.id!==id);
+  localSet(col, arr);
+}
+
+/* ---------------- generic save/list/delete ---------------- */
+async function saveRecord(col, data){
+  const id = uid();
+  const doc = Object.assign({}, data, {id, createdAt: new Date().toISOString()});
+  if(dbCap){
+    try{
+      await dbCap.collection(col).doc(id).set(doc);
+      return true;
+    }catch(e){
+      toast('No se pudo guardar (reintentá)');
+      return false;
+    }
+  } else {
+    localAdd(col, doc);
+    renderHistory(col);
+    return true;
+  }
+}
+
+async function deleteRecord(col, id){
+  if(dbCap){
+    try{ await dbCap.collection(col).doc(id).delete(); }
+    catch(e){ toast('No se pudo borrar'); }
+  } else {
+    localDelete(col, id);
+    renderHistory(col);
+  }
+}
+
+const historyCache = {}; // col -> array of docs (most recent first)
+
+function wireHistories(){
+  ['destete','esquila','senalada','movimientos','condicion_corporal'].forEach(col=>{
+    if(dbCap){
+      dbCap.collection(col).orderBy('createdAt','desc').limit(50).onSnapshot(
+        snap=>{
+          historyCache[col] = snap.docs.map(d=>d.data());
+          renderHistory(col);
+        },
+        err=>{ /* leave last known cache */ }
+      );
+    } else {
+      historyCache[col] = localGet(col);
+      renderHistory(col);
+    }
+  });
+}
+
+const HIST_CONF = {
+  destete: {el:'d_history', title:d=>`${d.campo||'(sin campo)'} — cuadro ${d.cuadro||'—'}`,
+    detail:d=>`Total Junta ${d.totalJunta||0} · Buenas ${d.buenas||0} · Sacadas ${d.sacadasTotal||0} · Serv. ${d.totalServicio||0}`,
+    csvCols:['campo','fecha','cuadro','totalJunta','buenas','refugoInf','refugoSup','sacadasTotal','borregasAgr','ovejasAgr','totalServicio','ccOvejas','machosSen','hembrasSen','ccBorregos','destinoTotalC','destinoTotalM','destinoTotalH','destinoTotalTotal','obs']},
+  esquila: {el:'e_history', title:d=>`${d.campo||'(sin campo)'}`,
+    detail:d=>`Total diario: ${d.totDiarioCant||0} cab. · Vellón ${d.totDiarioV||0} kg`,
+    csvCols:['campo','fecha','totDiarioCant','totDiarioTCuadro','totDiarioV','totDiarioTV','obs']},
+  senalada: {el:'s_history', title:d=>`${d.campo||'(sin campo)'} — cuadro ${d.cuadro||'—'}`,
+    detail:d=>`Ovejas totales ${d.ovejasTotales||0} · Señalado total ${d.totSen||0} · % ${d.porcentaje!==undefined?fmt(d.porcentaje)+'%':'—'}`,
+    csvCols:['campo','fecha','cuadro','peladas','lanudas','ovejasTotales','venta','caravSecas','corporal','machosSen','machosVenta','machosCampo','hembrasSen','hembrasVenta','hembrasCampo','totSen','totVenta','totCampo','porcentaje','obs']},
+  movimientos: {el:'m_history', title:d=>`${d.campo||'(sin campo)'}`,
+    detail:d=>`${(d.rows||[]).length} movimiento(s) · Total ${d.totCant||0} cab.`,
+    csvColsRows:true},
+  condicion_corporal: {el:'c_history', title:d=>`${d.campo||'(sin campo)'} — cuadro ${d.cuadro||'—'}`,
+    detail:d=>`${d.totalOvejas||0} ovejas · Promedio ${d.promedio!==undefined && d.promedio!==null?fmt(d.promedio):'—'}`,
+    csvCols:['campo','fecha','cuadro','totalOvejas','totalNumeral','promedio']}
+};
+
+function renderHistory(col){
+  const conf = HIST_CONF[col];
+  if(!conf) return;
+  const el = $(conf.el);
+  const docs = historyCache[col] || [];
+  if(docs.length===0){ el.innerHTML = '<div class="hist-empty">Sin registros todavía.</div>'; return; }
+  el.innerHTML = '';
+  docs.forEach(d=>{
+    const item = document.createElement('div');
+    item.className = 'hist-item';
+    const dateStr = d.fecha ? d.fecha.split('-').reverse().join('/') : '';
+    item.innerHTML = `
+      <div class="hist-top">
+        <div>
+          <div class="hist-title">${conf.title(d)}</div>
+          <div class="hist-date">${dateStr}</div>
+        </div>
+        <button class="hist-del" data-col="${col}" data-id="${d.id}">🗑</button>
+      </div>
+      <div class="hist-detail">${conf.detail(d)}</div>
+    `;
+    el.appendChild(item);
+  });
+  el.querySelectorAll('.hist-del').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(confirm('¿Borrar este registro? No se puede deshacer.')){
+        deleteRecord(btn.dataset.col, btn.dataset.id);
+      }
+    });
+  });
+}
+
+/* ================= DESTETE ================= */
+let destinoRows = [];
+function addDestinoRow(vals){
+  const row = Object.assign({categoria:'', C:'', M:'', H:''}, vals||{});
+  row._id = uid();
+  destinoRows.push(row);
+  renderDestino();
+}
+function renderDestino(){
+  const body = $('d_destinoBody');
+  body.innerHTML = '';
+  let tC=0,tM=0,tH=0,tT=0;
+  destinoRows.forEach(row=>{
+    const c = num(row.C), m = num(row.M), h = num(row.H), t = c+m+h;
+    tC+=c; tM+=m; tH+=h; tT+=t;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="wide" type="text" value="${row.categoria}" data-f="categoria"></td>
+      <td><input type="number" inputmode="numeric" value="${row.C}" data-f="C"></td>
+      <td><input type="number" inputmode="numeric" value="${row.M}" data-f="M"></td>
+      <td><input type="number" inputmode="numeric" value="${row.H}" data-f="H"></td>
+      <td>${t}</td>
+      <td><button class="row-del">✕</button></td>
+    `;
+    tr.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{ row[inp.dataset.f]=inp.value; renderDestino(); });
+    });
+    tr.querySelector('.row-del').addEventListener('click', ()=>{
+      destinoRows = destinoRows.filter(r=>r._id!==row._id);
+      renderDestino();
+    });
+    body.appendChild(tr);
+  });
+  $('d_totC').textContent = tC;
+  $('d_totM').textContent = tM;
+  $('d_totH').textContent = tH;
+  $('d_totTotal').textContent = tT;
+}
+$('d_addDestino').addEventListener('click', ()=>addDestinoRow());
+addDestinoRow();
+
+function updateDesteteCalcs(){
+  const buenas = num($('d_buenas').value);
+  const rInf = num($('d_refugoInf').value);
+  const rSup = num($('d_refugoSup').value);
+  const junta = num($('d_totalJunta').value);
+  const agrB = num($('d_borregasAgr').value);
+  const agrO = num($('d_ovejasAgr').value);
+
+  const sacadas = rInf + rSup;
+  $('d_sacadas').textContent = sacadas;
+
+  const sugerido = buenas + agrB + agrO;
+  $('d_totalServicioSugerido').textContent = sugerido;
+
+  const warn = $('d_juntaWarn');
+  if(junta>0 && (buenas+rInf+rSup) !== junta){
+    warn.classList.add('show');
+  } else {
+    warn.classList.remove('show');
+  }
+}
+['d_buenas','d_refugoInf','d_refugoSup','d_totalJunta','d_borregasAgr','d_ovejasAgr'].forEach(id=>{
+  $(id).addEventListener('input', updateDesteteCalcs);
+});
+updateDesteteCalcs();
+
+$('d_save').addEventListener('click', async ()=>{
+  const campo = $('d_campo').value.trim();
+  rememberCampo(campo);
+  const data = {
+    campo, fecha: $('d_fecha').value, cuadro: $('d_cuadro').value.trim(),
+    totalJunta: num($('d_totalJunta').value),
+    buenas: num($('d_buenas').value),
+    refugoInf: num($('d_refugoInf').value),
+    refugoSup: num($('d_refugoSup').value),
+    sacadasTotal: num($('d_refugoInf').value)+num($('d_refugoSup').value),
+    borregasAgr: num($('d_borregasAgr').value),
+    ovejasAgr: num($('d_ovejasAgr').value),
+    totalServicio: $('d_totalServicio').value!=='' ? num($('d_totalServicio').value) : (num($('d_buenas').value)+num($('d_borregasAgr').value)+num($('d_ovejasAgr').value)),
+    ccOvejas: $('d_ccOvejas').value!=='' ? num($('d_ccOvejas').value) : null,
+    machosSen: num($('d_machosSen').value),
+    hembrasSen: num($('d_hembrasSen').value),
+    ccBorregos: $('d_ccBorregos').value!=='' ? num($('d_ccBorregos').value) : null,
+    destino: destinoRows.map(r=>({categoria:r.categoria, C:num(r.C), M:num(r.M), H:num(r.H)})),
+    destinoTotalC: num($('d_totC').textContent), destinoTotalM: num($('d_totM').textContent),
+    destinoTotalH: num($('d_totH').textContent), destinoTotalTotal: num($('d_totTotal').textContent),
+    obs: $('d_obs').value.trim()
+  };
+  const ok = await saveRecord('destete', data);
+  if(ok){
+    toast('Registro de Destete guardado');
+    $('d_cuadro').value=''; $('d_totalJunta').value=''; $('d_buenas').value=''; $('d_refugoInf').value='';
+    $('d_refugoSup').value=''; $('d_borregasAgr').value=''; $('d_ovejasAgr').value=''; $('d_totalServicio').value='';
+    $('d_ccOvejas').value=''; $('d_machosSen').value=''; $('d_hembrasSen').value=''; $('d_ccBorregos').value=''; $('d_obs').value='';
+    destinoRows=[]; addDestinoRow();
+    updateDesteteCalcs();
+  }
+});
+
+$('d_export').addEventListener('click', ()=>{
+  const docs = historyCache['destete'] || [];
+  const cols = HIST_CONF.destete.csvCols;
+  const rows = [cols, ...docs.map(d=>cols.map(c=>d[c]))];
+  downloadCsv('destete', rows);
+});
+
+/* ================= ESQUILA ================= */
+const CUARTOS_N = 4, ROWS_PER_CUARTO = 3;
+let esquilaData = [];
+function initEsquila(){
+  esquilaData = [];
+  for(let c=0;c<CUARTOS_N;c++){
+    const rows=[];
+    for(let r=0;r<ROWS_PER_CUARTO;r++) rows.push({cuadro:'',categoria:'',cantidad:'',tCuadro:'',v:'',tv:''});
+    esquilaData.push(rows);
+  }
+  renderEsquila();
+}
+function renderEsquila(){
+  const wrap = $('e_cuartos');
+  wrap.innerHTML='';
+  let diarioCant=0, diarioTC=0, diarioV=0, diarioTV=0;
+  esquilaData.forEach((rows, ci)=>{
+    const box = document.createElement('div');
+    box.className='table-wrap';
+    let subCant=0, subTC=0, subV=0, subTV=0;
+    let bodyRows='';
+    rows.forEach((row,ri)=>{
+      const cant=num(row.cantidad), tc=num(row.tCuadro), v=num(row.v), tv=num(row.tv);
+      subCant+=cant; subTC+=tc; subV+=v; subTV+=tv;
+      bodyRows += `<tr>
+        <td class="cuarto-label">${ci+1}</td>
+        <td><input class="wide" type="text" value="${row.cuadro}" data-c="${ci}" data-r="${ri}" data-f="cuadro"></td>
+        <td><input class="wide" type="text" value="${row.categoria}" data-c="${ci}" data-r="${ri}" data-f="categoria"></td>
+        <td><input type="number" inputmode="numeric" value="${row.cantidad}" data-c="${ci}" data-r="${ri}" data-f="cantidad"></td>
+        <td><input type="number" inputmode="numeric" value="${row.tCuadro}" data-c="${ci}" data-r="${ri}" data-f="tCuadro"></td>
+        <td><input type="number" step="0.1" inputmode="decimal" value="${row.v}" data-c="${ci}" data-r="${ri}" data-f="v"></td>
+        <td><input type="number" step="0.1" inputmode="decimal" value="${row.tv}" data-c="${ci}" data-r="${ri}" data-f="tv"></td>
+      </tr>`;
+    });
+    diarioCant+=subCant; diarioTC+=subTC; diarioV+=subV; diarioTV+=subTV;
+    box.innerHTML = `<table>
+      <thead><tr><th></th><th>Cuadro</th><th>Categ.</th><th>Cant.</th><th>T.Cuadro</th><th>V.</th><th>T.V.</th></tr></thead>
+      <tbody>${bodyRows}
+        <tr class="subtotal"><td colspan="3" style="text-align:left;">Total Cuarto ${ci+1}</td><td>${subCant}</td><td>${subTC}</td><td>${fmt(subV)}</td><td>${fmt(subTV)}</td></tr>
+      </tbody>
+    </table>`;
+    wrap.appendChild(box);
+    box.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        esquilaData[inp.dataset.c][inp.dataset.r][inp.dataset.f] = inp.value;
+        renderEsquila();
+      });
+    });
+  });
+  $('e_totDiarioCant').textContent = diarioCant;
+  $('e_totDiarioTCuadro').textContent = diarioTC;
+  $('e_totDiarioV').textContent = fmt(diarioV);
+  $('e_totDiarioTV').textContent = fmt(diarioTV);
+}
+initEsquila();
+
+let esquilaCC = [{label:'',valor:''},{label:'',valor:''},{label:'',valor:''}];
+function renderEsquilaCC(){
+  const wrap = $('e_ccRows');
+  wrap.innerHTML='';
+  esquilaCC.forEach((row,i)=>{
+    const div = document.createElement('div');
+    div.className='row2';
+    div.style.marginBottom='8px';
+    div.innerHTML = `
+      <div class="field"><label>Categoría</label><input type="text" data-i="${i}" data-f="label" value="${row.label}" placeholder="Ej. Capones"></div>
+      <div class="field"><label>Cond. Corporal</label><input type="number" step="0.1" inputmode="decimal" data-i="${i}" data-f="valor" value="${row.valor}"></div>
+    `;
+    div.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{ esquilaCC[inp.dataset.i][inp.dataset.f]=inp.value; });
+    });
+    wrap.appendChild(div);
+  });
+}
+renderEsquilaCC();
+
+$('e_save').addEventListener('click', async ()=>{
+  const campo = $('e_campo').value.trim();
+  rememberCampo(campo);
+  const data = {
+    campo, fecha: $('e_fecha').value,
+    cuartos: esquilaData.map(rows=>rows.map(r=>({cuadro:r.cuadro,categoria:r.categoria,cantidad:num(r.cantidad),tCuadro:num(r.tCuadro),v:num(r.v),tv:num(r.tv)}))),
+    totDiarioCant: num($('e_totDiarioCant').textContent),
+    totDiarioTCuadro: num($('e_totDiarioTCuadro').textContent),
+    totDiarioV: num($('e_totDiarioV').textContent.replace(/\./g,'').replace(',','.')) || num($('e_totDiarioV').textContent),
+    totDiarioTV: num($('e_totDiarioTV').textContent.replace(/\./g,'').replace(',','.')) || num($('e_totDiarioTV').textContent),
+    condCorporal: esquilaCC.filter(r=>r.label||r.valor).map(r=>({label:r.label, valor:num(r.valor)})),
+    obs: $('e_obs').value.trim()
+  };
+  const ok = await saveRecord('esquila', data);
+  if(ok){
+    toast('Registro de Esquila guardado');
+    initEsquila();
+    esquilaCC=[{label:'',valor:''},{label:'',valor:''},{label:'',valor:''}];
+    renderEsquilaCC();
+    $('e_obs').value='';
+  }
+});
+
+$('e_export').addEventListener('click', ()=>{
+  const docs = historyCache['esquila'] || [];
+  const rows = [['campo','fecha','cuarto','cuadro','categoria','cantidad','tCuadro','v','tv']];
+  docs.forEach(d=>{
+    (d.cuartos||[]).forEach((cuarto, ci)=>{
+      cuarto.forEach(r=>{
+        if(r.categoria || r.cantidad) rows.push([d.campo,d.fecha,ci+1,r.cuadro,r.categoria,r.cantidad,r.tCuadro,r.v,r.tv]);
+      });
+    });
+  });
+  downloadCsv('esquila', rows);
+});
+
+/* ================= SEÑALADA ================= */
+function updateSenalada(){
+  const peladas = num($('s_peladas').value), lanudas = num($('s_lanudas').value);
+  const totales = peladas + lanudas;
+  $('s_totales').innerHTML = `<strong>${totales}</strong>`;
+
+  const mS=num($('s_machosSen').value), mV=num($('s_machosVenta').value), mC=num($('s_machosCampo').value);
+  const hS=num($('s_hembrasSen').value), hV=num($('s_hembrasVenta').value), hC=num($('s_hembrasCampo').value);
+  const totSen = mS+hS, totVenta = mV+hV, totCampo = mC+hC;
+  $('s_totSen').textContent = totSen;
+  $('s_totVenta').textContent = totVenta;
+  $('s_totCampo').textContent = totCampo;
+
+  const pct = totales>0 ? (totSen*100/totales) : 0;
+  $('s_porcentaje').textContent = totales>0 ? fmt(pct)+'%' : '—';
+}
+['s_peladas','s_lanudas','s_machosSen','s_machosVenta','s_machosCampo','s_hembrasSen','s_hembrasVenta','s_hembrasCampo'].forEach(id=>{
+  $(id).addEventListener('input', updateSenalada);
+});
+updateSenalada();
+
+$('s_save').addEventListener('click', async ()=>{
+  const campo = $('s_campo').value.trim();
+  rememberCampo(campo);
+  const peladas=num($('s_peladas').value), lanudas=num($('s_lanudas').value), totales=peladas+lanudas;
+  const mS=num($('s_machosSen').value), mV=num($('s_machosVenta').value), mC=num($('s_machosCampo').value);
+  const hS=num($('s_hembrasSen').value), hV=num($('s_hembrasVenta').value), hC=num($('s_hembrasCampo').value);
+  const totSen=mS+hS;
+  const data = {
+    campo, fecha: $('s_fecha').value, cuadro: $('s_cuadro').value.trim(),
+    peladas, lanudas, ovejasTotales: totales,
+    venta: num($('s_venta').value), caravSecas: num($('s_caravSecas').value),
+    corporal: $('s_corporal').value!=='' ? num($('s_corporal').value) : null,
+    machosSen:mS, machosVenta:mV, machosCampo:mC,
+    hembrasSen:hS, hembrasVenta:hV, hembrasCampo:hC,
+    totSen, totVenta:mV+hV, totCampo:mC+hC,
+    porcentaje: totales>0 ? (totSen*100/totales) : null,
+    obs: $('s_obs').value.trim()
+  };
+  const ok = await saveRecord('senalada', data);
+  if(ok){
+    toast('Registro de Señalada guardado');
+    ['s_cuadro','s_peladas','s_lanudas','s_venta','s_caravSecas','s_corporal','s_machosSen','s_machosVenta','s_machosCampo','s_hembrasSen','s_hembrasVenta','s_hembrasCampo','s_obs'].forEach(id=>$(id).value='');
+    updateSenalada();
+  }
+});
+
+$('s_export').addEventListener('click', ()=>{
+  const docs = historyCache['senalada'] || [];
+  const cols = HIST_CONF.senalada.csvCols;
+  const rows = [cols, ...docs.map(d=>cols.map(c=>d[c]))];
+  downloadCsv('senalada', rows);
+});
+
+/* ================= MOVIMIENTOS ================= */
+let movRows = [];
+function addMovRow(){
+  movRows.push({_id:uid(), fecha:todayStr(), cat:'', origen:'', destino:'', cant:''});
+  renderMov();
+}
+function renderMov(){
+  const body = $('m_body');
+  body.innerHTML='';
+  let tot=0;
+  movRows.forEach(row=>{
+    tot += num(row.cant);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="date" value="${row.fecha}" data-f="fecha" style="width:120px;"></td>
+      <td><input class="wide" type="text" value="${row.cat}" data-f="cat" style="width:70px;"></td>
+      <td><input class="wide" type="text" value="${row.origen}" data-f="origen"></td>
+      <td><input class="wide" type="text" value="${row.destino}" data-f="destino"></td>
+      <td><input type="number" inputmode="numeric" value="${row.cant}" data-f="cant"></td>
+      <td><button class="row-del">✕</button></td>
+    `;
+    tr.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{ row[inp.dataset.f]=inp.value; renderMov(); });
+    });
+    tr.querySelector('.row-del').addEventListener('click', ()=>{
+      movRows = movRows.filter(r=>r._id!==row._id);
+      renderMov();
+    });
+    body.appendChild(tr);
+  });
+  $('m_totCant').textContent = tot;
+}
+$('m_addRow').addEventListener('click', addMovRow);
+addMovRow();
+
+$('m_save').addEventListener('click', async ()=>{
+  const campo = $('m_campo').value.trim();
+  rememberCampo(campo);
+  const rows = movRows.filter(r=>r.cat||r.origen||r.destino||r.cant).map(r=>({fecha:r.fecha,cat:r.cat,origen:r.origen,destino:r.destino,cant:num(r.cant)}));
+  const data = {
+    campo, rows, totCant: num($('m_totCant').textContent),
+    obs: $('m_obs').value.trim()
+  };
+  const ok = await saveRecord('movimientos', data);
+  if(ok){
+    toast('Registro de Movimientos guardado');
+    movRows=[]; addMovRow();
+    $('m_obs').value='';
+  }
+});
+
+$('m_export').addEventListener('click', ()=>{
+  const docs = historyCache['movimientos'] || [];
+  const rows = [['campo','fecha','cat','origen','destino','cant']];
+  docs.forEach(d=>{
+    (d.rows||[]).forEach(r=>rows.push([d.campo,r.fecha,r.cat,r.origen,r.destino,r.cant]));
+  });
+  downloadCsv('movimientos', rows);
+});
+
+/* ================= CONDICION CORPORAL ================= */
+const CC_SCORES = [1,1.5,2,2.5,3,3.5,4];
+let ccCounts = {}; CC_SCORES.forEach(s=>ccCounts[s]=0);
+let ccHistoryStack = [];
+
+function renderCcGrid(){
+  const grid = $('c_grid');
+  grid.innerHTML='';
+  CC_SCORES.forEach(score=>{
+    const col = document.createElement('div');
+    col.className='cc-col';
+    const tally = '|'.repeat(Math.min(ccCounts[score],20)) + (ccCounts[score]>20 ? '…' : '');
+    col.innerHTML = `
+      <div class="cc-score">${score}</div>
+      <div class="cc-count">${ccCounts[score]}</div>
+      <div class="cc-tally">${tally}</div>
+      <button class="cc-tap" data-score="${score}">+</button>
+    `;
+    col.querySelector('.cc-tap').addEventListener('click', ()=>{
+      ccCounts[score]++;
+      ccHistoryStack.push(score);
+      renderCcGrid();
+      updateCcSummary();
+    });
+    grid.appendChild(col);
+  });
+}
+function updateCcSummary(){
+  let totalOvejas=0, totalNumeral=0;
+  CC_SCORES.forEach(s=>{ totalOvejas += ccCounts[s]; totalNumeral += s*ccCounts[s]; });
+  $('c_totalOvejas').textContent = totalOvejas;
+  $('c_promedio').textContent = totalOvejas>0 ? fmt(totalNumeral/totalOvejas) : '—';
+}
+$('c_undo').addEventListener('click', ()=>{
+  const last = ccHistoryStack.pop();
+  if(last!==undefined && ccCounts[last]>0){ ccCounts[last]--; renderCcGrid(); updateCcSummary(); }
+});
+$('c_reset').addEventListener('click', ()=>{
+  if(confirm('¿Reiniciar el conteo de condición corporal?')){
+    CC_SCORES.forEach(s=>ccCounts[s]=0);
+    ccHistoryStack=[];
+    renderCcGrid();
+    updateCcSummary();
+  }
+});
+renderCcGrid();
+updateCcSummary();
+
+$('c_save').addEventListener('click', async ()=>{
+  const campo = $('c_campo').value.trim();
+  rememberCampo(campo);
+  let totalOvejas=0, totalNumeral=0;
+  CC_SCORES.forEach(s=>{ totalOvejas += ccCounts[s]; totalNumeral += s*ccCounts[s]; });
+  if(totalOvejas===0){ toast('Registrá al menos una oveja antes de guardar'); return; }
+  const data = {
+    campo, fecha: $('c_fecha').value, cuadro: $('c_cuadro').value.trim(),
+    scores: Object.assign({}, ccCounts),
+    totalOvejas, totalNumeral,
+    promedio: totalOvejas>0 ? totalNumeral/totalOvejas : null
+  };
+  const ok = await saveRecord('condicion_corporal', data);
+  if(ok){
+    toast('Registro de Condición Corporal guardado');
+    $('c_cuadro').value='';
+    CC_SCORES.forEach(s=>ccCounts[s]=0);
+    ccHistoryStack=[];
+    renderCcGrid();
+    updateCcSummary();
+  }
+});
+
+$('c_export').addEventListener('click', ()=>{
+  const docs = historyCache['condicion_corporal'] || [];
+  const cols = HIST_CONF.condicion_corporal.csvCols;
+  const rows = [cols, ...docs.map(d=>cols.map(c=>d[c]))];
+  downloadCsv('condicion_corporal', rows);
+});
+
+/* ---------------- boot ---------------- */
+initCapabilities();
+
+})();
+</script>
+</body>
+</html>
